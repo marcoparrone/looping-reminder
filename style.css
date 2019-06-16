@@ -7,6 +7,12 @@ label, input {
     display: inline-block;
 }
 
+input {
+    position: relative;
+    float: right;
+    right: 0;
+}
+
 div {
     padding-bottom: 10px
 }

@@ -6,13 +6,13 @@ document.addEventListener('DOMContentLoaded', function () {
     Notification.requestPermission();
 });
 
-function reminderNotify(title, body) {
+function reminderNotify(title, body, tag) {
     try {
 	navigator.serviceWorker.getRegistration()
 	    .then(reg => reg.showNotification(title, {
 		body: body,
 		icon: 'reminder-256.png',
-		tag: 'looping-reminder'
+		tag: tag
 	    }))
 	    .catch(err => alert('Service Worker registration error: ' + err));
     } catch (err) {
@@ -78,6 +78,31 @@ function addReminderToDocument (title, interval, body, reminderID) {
     updateReminder(reminderID);
 
     document.getElementById("appContent").appendChild(reminderDiv);
+
+    var titleLS = parseInt (window.getComputedStyle(reminderTitleLabel).width);
+    var intervalLS = parseInt (window.getComputedStyle(reminderIntervalLabel).width);
+    var bodyLS = parseInt (window.getComputedStyle(reminderBodyLabel).width);
+    var maxLabelSize = intervalLS;
+    
+    if (intervalLS > titleLS) {
+	if (intervalLS > bodyLS) {
+	    maxLabelSize = intervalLS;
+	} else {
+	    maxLabelSize = bodyLS;
+	}
+    } else {
+	if (titleLS > bodyLS) {
+	    maxLabelSize = titleLS;
+	} else {
+	    maxLabelSize = bodyLS;
+	}
+    }
+
+    maxLabelSize += 5;
+    var maxLabelSizeString = maxLabelSize.toString() + "px";
+    reminderTitleLabel.style.width = maxLabelSizeString;
+    reminderIntervalLabel.style.width = maxLabelSizeString;
+    reminderBodyLabel.style.width = maxLabelSizeString;
 }
 
 function initApp () {

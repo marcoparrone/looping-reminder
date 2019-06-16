@@ -13,14 +13,18 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function notifyMe() {
-  if (Notification.permission !== 'granted')
-    Notification.requestPermission();
-  else {
-    var notification = new Notification(myTitle, {
-      icon: 'reminder-256.png',
-      body: myBody,
-    });
-  }
+  Notification.requestPermission(function(result) {
+    if (result === 'granted') {
+      navigator.serviceWorker.ready.then(function(registration) {
+        registration.showNotification(myTitle, {
+          body: myBody,
+          icon: 'reminder-256.png',
+//          vibrate: [200, 100, 200, 100, 200, 100, 200],
+          tag: 'looping-reminder'
+        });
+      });
+    }
+  });
 }
 
 function changeInterval() {

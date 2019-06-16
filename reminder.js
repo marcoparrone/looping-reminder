@@ -13,18 +13,18 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function notifyMe() {
-  Notification.requestPermission(function(result) {
-    if (result === 'granted') {
-      navigator.serviceWorker.ready.then(function(registration) {
-        registration.showNotification(myTitle, {
-          body: myBody,
-          icon: 'reminder-256.png',
-//          vibrate: [200, 100, 200, 100, 200, 100, 200],
-          tag: 'looping-reminder'
-        });
-      });
-    }
-  });
+    Notification.requestPermission(function(result) {
+	if (result === 'granted') {
+	    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+		registrations[0].showNotification(myTitle, {
+		    body: myBody,
+		    icon: 'reminder-256.png',
+		    //          vibrate: [200, 100, 200, 100, 200, 100, 200],
+		    tag: 'looping-reminder'
+		});
+	    });
+	}
+    });
 }
 
 function changeInterval() {

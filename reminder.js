@@ -31,6 +31,7 @@ function notifyMe() {
     }
 }
 
+navigator.serviceWorker.register('service-worker.js');
 function changeInterval() {
     var interval =  document.getElementById("intervalInput").value;
     document.getElementById("intervalText").innerHTML = interval;

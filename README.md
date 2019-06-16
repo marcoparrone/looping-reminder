@@ -1,4 +1,4 @@
 # looping-reminder
 Looping Reminder shows a notification at defined intervals of time.
 
-You can find it here: https://marcoparrone.github.io/looping-reminder/
+It is a Progressive Web App and it is avaiable here: https://marcoparrone.github.io/looping-reminder/

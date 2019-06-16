@@ -2,29 +2,34 @@ var mySchedule = null;
 var myTitle = 'Reminder';
 var myBody = 'Reminder';
 
-document.addEventListener('DOMContentLoaded', function () {
-  if (!Notification) {
-    alert('Desktop notifications not available in your browser. Try Chrome.'); 
-    return;
-  }
-
-  if (Notification.permission !== 'granted')
-    Notification.requestPermission();
-});
+function isNewNotificationSupported() {
+    if (!window.Notification || !Notification.requestPermission)
+        return false;
+    if (Notification.permission == 'granted')
+        throw new Error('You must only call this \*before\* calling
+Notification.requestPermission(), otherwise this feature detect would bug the
+user with an actual notification!');
+    try {
+        new Notification('');
+    } catch (e) {
+        if (e.name == 'TypeError')
+            return false;
+    }
+    return true;
+}
 
 function notifyMe() {
-    Notification.requestPermission(function(result) {
-	if (result === 'granted') {
-	    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    if (window.Notification && Notification.permission == 'granted') {
+	navigator.serviceWorker.getRegistrations().then(function(registrations) {
 		registrations[0].showNotification(myTitle, {
 		    body: myBody,
 		    icon: 'reminder-256.png',
-		    //          vibrate: [200, 100, 200, 100, 200, 100, 200],
 		    tag: 'looping-reminder'
 		});
 	    });
-	}
-    });
+    } else if (isNewNotificationSupported()) {
+	Notification.requestPermission();
+    }
 }
 
 function changeInterval() {

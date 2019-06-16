@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Looping Reminder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="Description" content="A looping reminder.">
+<meta name="theme-color" content="black"/>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon.ico" type="image/x-icon" />  
+<link rel="apple-touch-icon" href="reminder-152.png">   
+<meta name="apple-mobile-web-app-capable" content="yes">  
+<meta name="apple-mobile-web-app-status-bar-style" content="white"> 
+<meta name="apple-mobile-web-app-title" content="Looping Reminder"> 
+<meta name="msapplication-TileImage" content="reminder-144.png">  
+<meta name="msapplication-TileColor" content="#000000">
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+        .then((reg) => {
+          console.log('Service worker registered.', reg);
+        });
+  });
+}
+</script>
+</head>
+<body onload="changeInterval()">
+<h1>Looping Reminder</h1>
+<p>This pages alerts you every <span id="intervalText"></span> seconds.</p>
+<p>Change reminder:<br />
+<label>Interval: <input type="text" id="intervalInput" value="600"></label><br />
+<label>Title: <input type="text" id="titleInput" value="Reminder"></label><br />
+<label>Body: <input type="text" id="bodyInput" value="Reminder"></label><br />
+</p>
+<button onclick="changeInterval()">Submit</button>
+<script src="reminder.js"></script>
+</body>
+</html>

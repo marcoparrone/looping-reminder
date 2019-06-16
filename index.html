@@ -15,16 +15,6 @@
 <meta name="apple-mobile-web-app-title" content="Looping Reminder"> 
 <meta name="msapplication-TileImage" content="reminder-144.png">  
 <meta name="msapplication-TileColor" content="#000000">
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js')
-        .then((reg) => {
-          console.log('Service worker registered.', reg);
-        });
-  });
-}
-</script>
 </head>
 <body onload="changeInterval()">
 <h1>Looping Reminder</h1>

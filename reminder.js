@@ -6,13 +6,12 @@ document.addEventListener('DOMContentLoaded', function () {
     Notification.requestPermission();
 });
 
-function reminderNotify(title, body, tag) {
+function reminderNotify(title, body) {
     try {
 	navigator.serviceWorker.getRegistration()
 	    .then(reg => reg.showNotification(title, {
 		body: body,
-		icon: 'reminder-256.png',
-		tag: tag
+		icon: 'reminder-256.png'
 	    }))
 	    .catch(err => alert('Service Worker registration error: ' + err));
     } catch (err) {

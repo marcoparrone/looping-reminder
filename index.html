@@ -16,15 +16,11 @@
 <meta name="msapplication-TileImage" content="reminder-144.png">  
 <meta name="msapplication-TileColor" content="#000000">
 </head>
-<body onload="changeInterval()">
+<body onload="initApp()">
 <h1>Looping Reminder</h1>
-<p>This pages alerts you every <span id="intervalText"></span> seconds.</p>
-<p>Change reminder:<br />
-<label>Interval: <input type="text" id="intervalInput" value="600"></label><br />
-<label>Title: <input type="text" id="titleInput" value="Reminder"></label><br />
-<label>Body: <input type="text" id="bodyInput" value="Reminder"></label><br />
-</p>
-<button onclick="changeInterval()">Submit</button>
+<p>Looping Reminder shows notifications at defined intervals of time.</p>
+<div id="appContent"></div>
+<button onclick="addReminder()">Add a reminder</button>
 <script src="reminder.js"></script>
 </body>
 </html>

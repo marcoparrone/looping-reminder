@@ -1,15 +1,15 @@
 var cacheName = 'looping-reminder-static-cache-v1';
 var filesToCache = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/reminder.js',
-  '/manifest.json',
-  '/reminder-128.png',
-  '/reminder-144.png',
-  '/reminder-192.png',
-  '/reminder-256.png',
-  '/reminder-512.png'
+  '/looping-reminder/',
+  'index.html',
+  'style.css',
+  'reminder.js',
+  'manifest.json',
+  'reminder-128.png',
+  'reminder-144.png',
+  'reminder-192.png',
+  'reminder-256.png',
+  'reminder-512.png'
 ];
 
 /* Start the service worker and cache all of the app's content */

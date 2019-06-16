@@ -3,6 +3,7 @@ var myTitle = 'Reminder';
 var myBody = 'Reminder';
 
 navigator.serviceWorker.register('service-worker.js');
+Notification.requestPermission();
 
 function notifyMe() {
     try {

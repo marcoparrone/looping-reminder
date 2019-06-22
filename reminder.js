@@ -25,15 +25,29 @@ function reminderNotify(title, body, icon) {
 
 // Update the reminder from the input data and update the notification and its schedulation.
 function updateReminder(reminderID) {
+    var intervalString = "";
+    var interval = 0;
     var reminderIdString = reminderID.toString();
     reminders[reminderID][0] = reminders[reminderID][4].querySelector( "#" + "titleInput" + reminderIdString).value;
-    reminders[reminderID][1] = reminders[reminderID][4].querySelector( "#" + "intervalInput" + reminderIdString).value;
+    intervalString = reminders[reminderID][4].querySelector( "#" + "intervalInput" + reminderIdString).value;
+    if (isNaN(intervalString)) {
+	alert ('Interval value is not a number for "' + reminders[reminderID][0] + '" - it will be reverted.');
+	reminders[reminderID][4].querySelector( "#" + "intervalInput" + reminderIdString).value = reminders[reminderID][1].toString();
+    } else {
+	interval = parseInt (intervalString);
+	if (interval > 864000000) {
+	    alert('Selected interval is too big for "' + reminders[reminderID][0] + '"- it will be reverted.');
+	    reminders[reminderID][4].querySelector( "#" + "intervalInput" + reminderIdString).value = reminders[reminderID][1].toString();
+	} else {
+	    reminders[reminderID][1] = interval.toString();
+	}
+    }
     reminders[reminderID][2] = reminders[reminderID][4].querySelector( "#" + "bodyInput" + reminderIdString).value;
     reminders[reminderID][3] = reminders[reminderID][4].querySelector( "#" + "iconInput" + reminderIdString).value;
     if (reminders[reminderID][5] != null) {
 	clearInterval(reminders[reminderID][5]);
     }
-    reminders[reminderID][5] = setInterval(function () { reminderNotify(reminders[reminderID][0], reminders[reminderID][2], reminders[reminderID][3]) }, reminders[reminderID][1] * 1000);
+    reminders[reminderID][5] = setInterval(function () { reminderNotify(reminders[reminderID][0], reminders[reminderID][2], reminders[reminderID][3]) }, parseInt(reminders[reminderID][1]) * 1000);
 }
 
 // Add all the graphic elements of a reminder to the document.
@@ -130,6 +144,6 @@ function initApp () {
 function addReminder() {
     var last = reminders.length;
     Notification.requestPermission(); // Give another chance to give the permission to notifications.
-    reminders.push(["ExampleTitle" + last.toString(), 600, "ExampleBody" + last.toString(), "reminder-512.png"]);
+    reminders.push(["ExampleTitle" + last.toString(), "600", "ExampleBody" + last.toString(), "reminder-512.png"]);
     addReminderToDocument(reminders[last][0],reminders[last][1],reminders[last][2],reminders[last][3],last);
 }

@@ -28,30 +28,30 @@ function updateReminder(reminderID) {
     var intervalString = "";
     var interval = 0;
     var reminderIdString = reminderID.toString();
-    reminders[reminderID][0] = reminders[reminderID][4].querySelector( "#" + "titleInput" + reminderIdString).value;
-    intervalString = reminders[reminderID][4].querySelector( "#" + "intervalInput" + reminderIdString).value;
+    reminders[reminderID].title = reminders[reminderID].element.querySelector( "#" + "titleInput" + reminderIdString).value;
+    intervalString = reminders[reminderID].element.querySelector( "#" + "intervalInput" + reminderIdString).value;
     if (isNaN(intervalString)) {
-	alert ('Interval value is not a number for "' + reminders[reminderID][0] + '" - it will be reverted.');
-	reminders[reminderID][4].querySelector( "#" + "intervalInput" + reminderIdString).value = reminders[reminderID][1].toString();
+	alert ('Interval value is not a number for "' + reminders[reminderID].title + '" - it will be reverted.');
+	reminders[reminderID].element.querySelector( "#" + "intervalInput" + reminderIdString).value = reminders[reminderID].interval.toString();
     } else {
 	interval = parseInt (intervalString);
 	if (interval > 864000000) {
-	    alert('Selected interval is too big for "' + reminders[reminderID][0] + '"- it will be reverted.');
-	    reminders[reminderID][4].querySelector( "#" + "intervalInput" + reminderIdString).value = reminders[reminderID][1].toString();
+	    alert('Selected interval is too big for "' + reminders[reminderID].title + '"- it will be reverted.');
+	    reminders[reminderID].element.querySelector( "#" + "intervalInput" + reminderIdString).value = reminders[reminderID].interval.toString();
 	} else {
-	    reminders[reminderID][1] = interval.toString();
+	    reminders[reminderID].interval = interval.toString();
 	}
     }
-    reminders[reminderID][2] = reminders[reminderID][4].querySelector( "#" + "bodyInput" + reminderIdString).value;
-    reminders[reminderID][3] = reminders[reminderID][4].querySelector( "#" + "iconInput" + reminderIdString).value;
-    if (reminders[reminderID][5] != null) {
-	clearInterval(reminders[reminderID][5]);
+    reminders[reminderID].body = reminders[reminderID].element.querySelector( "#" + "bodyInput" + reminderIdString).value;
+    reminders[reminderID].icon = reminders[reminderID].element.querySelector( "#" + "iconInput" + reminderIdString).value;
+    if (reminders[reminderID].schedule != null) {
+	clearInterval(reminders[reminderID].schedule);
     }
-    reminders[reminderID][5] = setInterval(function () { reminderNotify(reminders[reminderID][0], reminders[reminderID][2], reminders[reminderID][3]) }, parseInt(reminders[reminderID][1]) * 1000);
+    reminders[reminderID].schedule = setInterval(function () { reminderNotify(reminders[reminderID].title, reminders[reminderID].body, reminders[reminderID].icon) }, parseInt(reminders[reminderID].interval) * 1000);
 }
 
 // Add all the graphic elements of a reminder to the document.
-function addReminderToDocument (title, interval, body, icon, reminderID) {
+function addReminderToDocument (reminderID) {
     var reminderDiv = document.createElement("div");
     
     var reminderTitleLabel = document.createElement("label");
@@ -93,10 +93,10 @@ function addReminderToDocument (title, interval, body, icon, reminderID) {
     reminderBodyInput.setAttribute("id","bodyInput" + reminderIDString);
     reminderIconInput.setAttribute("id","iconInput" + reminderIDString);
 
-    reminderTitleInput.setAttribute("value", title);
-    reminderIntervalInput.setAttribute("value", interval.toString());
-    reminderBodyInput.setAttribute("value", body);
-    reminderIconInput.setAttribute("value", icon);
+    reminderTitleInput.setAttribute("value", reminders[reminderID].title);
+    reminderIntervalInput.setAttribute("value", reminders[reminderID].interval);
+    reminderBodyInput.setAttribute("value", reminders[reminderID].body);
+    reminderIconInput.setAttribute("value", reminders[reminderID].icon);
 
     reminderTitleInput.onchange = function () {updateReminder(reminderID);};
     reminderIntervalInput.onchange = function () {updateReminder(reminderID);};
@@ -104,7 +104,7 @@ function addReminderToDocument (title, interval, body, icon, reminderID) {
     reminderIconInput.onchange = function () {updateReminder(reminderID);};
 
     // Store the root element of the reminder for later reference.
-    reminders[reminderID][4] = reminderDiv;
+    reminders[reminderID].element = reminderDiv;
 
     // Update reminder and schedulation.
     updateReminder(reminderID);
@@ -136,14 +136,23 @@ function addReminderToDocument (title, interval, body, icon, reminderID) {
 function initApp () {
     var remindersCount = reminders.length;
     for (var i = 0; i < remindersCount; i++) {
-	addReminderToDocument(reminders[i][0],reminders[i][1],reminders[i][2],reminders[i][3],i);
+	addReminderToDocument(i);
     }
 }
 
 // Add a reminder.
 function addReminder() {
     var last = reminders.length;
-    Notification.requestPermission(); // Give another chance to give the permission to notifications.
-    reminders.push(["ExampleTitle" + last.toString(), "600", "ExampleBody" + last.toString(), "reminder-512.png"]);
-    addReminderToDocument(reminders[last][0],reminders[last][1],reminders[last][2],reminders[last][3],last);
+    var newReminder = {
+	title: "ExampleTitle" + last.toString(),
+	interval: "600",
+	body: "ExampleBody" + last.toString(),
+	icon: "reminder-512.png",
+	element: null,
+	schedule: null
+    };
+    reminders.push(newReminder);
+    addReminderToDocument(last);
+    // Give another chance to give the permission to notifications.
+    Notification.requestPermission();
 }

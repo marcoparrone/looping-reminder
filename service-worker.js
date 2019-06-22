@@ -1,32 +1,29 @@
-var cacheName = 'looping-reminder-static-cache-v1';
-var filesToCache = [
-  '/looping-reminder/',
-  'index.html',
-  'style.css',
-  'reminder.js',
-  'manifest.json',
-  'reminder-128.png',
-  'reminder-144.png',
-  'reminder-192.png',
-  'reminder-256.png',
-  'reminder-512.png'
-];
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js');
 
-/* Start the service worker and cache all of the app's content */
-self.addEventListener('install', function(e) {
-  e.waitUntil(
-    caches.open(cacheName).then(function(cache) {
-      return cache.addAll(filesToCache);
+if (workbox) {
+  console.log(`Yay! Workbox is loaded`);
+} else {
+  console.log(`Boo! Workbox didn't load`);
+}
+
+// Cache text files but update in the background.
+workbox.routing.registerRoute(
+    /\.(?:css|html|json)$/, 
+    new workbox.strategies.StaleWhileRevalidate({
+	cacheName: 'text-cache',
     })
-  );
-});
+);
 
-/* Serve cached content when offline */
-self.addEventListener('fetch', function(e) {
-  e.respondWith(
-    caches.match(e.request).then(function(response) {
-      return response || fetch(e.request);
-    })
-  );
-});
-
+// Cache image files - maximum 20 images for a maximum age of a week.
+workbox.routing.registerRoute(
+  /\.(?:png|jpg|jpeg|svg|gif)$/, 
+  new workbox.strategies.CacheFirst({
+    cacheName: 'image-cache',
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxEntries: 20,
+        maxAgeSeconds: 7 * 24 * 60 * 60,
+      })
+    ],
+  })
+);

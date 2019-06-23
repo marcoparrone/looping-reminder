@@ -18,6 +18,44 @@ function reminderNotify(title, body, icon) {
     }
 }
 
+class EnableNotifications extends React.Component {
+    constructor (props) {
+        super(props);
+        if (Notification.permission === "granted") {
+            this.state = {
+                permission: true
+            };
+        } else {
+            this.state = {
+                permission: false
+            };
+        }
+    }
+
+    askPermission () {
+        var reference = this;
+        Notification.requestPermission(function(result){
+            if (Notification.permission === "granted") {
+                reference.setState({
+                    permission: true
+                });
+            }
+        });
+    }
+
+    render () {
+        return (
+            <div>
+            {
+                this.state.permission ||
+                    <div>Notifications must be enabled to use this application:
+                      <button onClick={event => this.askPermission()}>Enable notifications</button>
+                    </div>
+            }
+            </div>
+        );
+    }
+}
 
 function AddReminder (props) {
     return (
@@ -260,6 +298,7 @@ function App() {
     return (
         <div className="App">
 	  <header className="App-header">
+            <EnableNotifications/>
             <RemindersList/>
           </header>
         </div>

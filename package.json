@@ -1,0 +1,49 @@
+{
+    "name": "looping-reminder",
+    "version": "0.1.0",
+    "homepage": "https://marcoparrone.github.io/looping-reminder",
+    "private": true,
+    "bugs": {
+	"url" : "https://github.com/marcoparrone/looping-reminder/issues",
+	"email" : "marco.parrone@gmail.com"
+    },
+    "license": "MIT",
+    "dependencies": {
+	"gh-pages": "^2.0.1",
+	"react": "^16.8.6",
+	"react-dom": "^16.8.6",
+	"react-scripts": "3.0.1",
+	"typescript": "^3.5.2"
+    },
+    "scripts": {
+	"predeploy": "npm run build",
+	"deploy": "gh-pages -d build",
+	"start": "react-scripts start",
+	"build": "react-scripts build",
+	"test": "react-scripts test",
+	"eject": "react-scripts eject",
+	"storybook": "start-storybook -p 9009 -s public",
+	"build-storybook": "build-storybook -s public"
+    },
+    "eslintConfig": {
+	"extends": "react-app"
+    },
+    "browserslist": {
+	"production": [
+	    ">0.2%",
+	    "not dead",
+	    "not op_mini all"
+	],
+	"development": [
+	    "last 1 chrome version",
+	    "last 1 firefox version",
+	    "last 1 safari version"
+	]
+    },
+    "devDependencies": {
+	"@storybook/addon-actions": "^5.1.9",
+	"@storybook/addon-links": "^5.1.9",
+	"@storybook/addons": "^5.1.9",
+	"@storybook/react": "^5.1.9"
+    }
+}

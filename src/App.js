@@ -1,6 +1,26 @@
 import React from 'react';
 import './App.css';
 
+import '@material/react-top-app-bar/dist/top-app-bar.css';
+import '@material/react-material-icon/dist/material-icon.css';
+
+import TopAppBar, {
+  TopAppBarFixedAdjust, 
+  TopAppBarIcon,
+  TopAppBarRow,
+  TopAppBarSection,
+  TopAppBarTitle,
+} from '@material/react-top-app-bar';
+import MaterialIcon from '@material/react-material-icon';
+
+import "@material/snackbar/dist/mdc.snackbar.css";
+import {MDCSnackbar} from '@material/snackbar';
+
+import "@material/dialog/dist/mdc.dialog.css";
+import {MDCDialog} from '@material/dialog';
+
+import "@material/card/dist/mdc.card.css";
+
 // Register the service worker.
 navigator.serviceWorker.register('notification.js');
 
@@ -33,7 +53,7 @@ class EnableNotifications extends React.Component {
     }
 
     askPermission () {
-        var reference = this;
+        let reference = this;
         Notification.requestPermission(function(result){
             if (Notification.permission === "granted") {
                 reference.setState({
@@ -57,12 +77,6 @@ class EnableNotifications extends React.Component {
     }
 }
 
-function AddReminder (props) {
-    return (
-        <button onClick={props.handler}>Add a reminder</button>
-    );
-}
-
 class Reminder extends React.Component {
     constructor(props) {
         super(props);
@@ -75,23 +89,25 @@ class Reminder extends React.Component {
             setTitleHandler: props.setTitleHandler,
             setIntervalHandler: props.setIntervalHandler,
             setBodyHandler: props.setBodyHandler,
-            setIconHandler: props.setIconHandler
+            setIconHandler: props.setIconHandler,
+            deleteReminder: props.deleteReminder,
+            remindersListRef: props.remindersListRef
         };
         this.reminderRef = React.createRef();
     }
 
     // Equalize the legth of the labels, for a more graphically pleasing interface.
     makeLabelsEqualSized () {
-        var labels = this.reminderRef.current.querySelectorAll("label");
-        var maxLabelSize = 0;
+        let labels = this.reminderRef.current.querySelectorAll("label");
+        let maxLabelSize = 0;
         labels.forEach (function(label) {
-            var currLabelSize = parseInt(window.getComputedStyle(label).width);
+            let currLabelSize = parseInt(window.getComputedStyle(label).width);
             if (currLabelSize > maxLabelSize) {
                 maxLabelSize = currLabelSize;
             }
         });
         maxLabelSize += 5;
-        var maxLabelSizeString = maxLabelSize.toString() + "px";
+        let maxLabelSizeString = maxLabelSize.toString() + "px";
         labels.forEach (function(label) {
             label.style.width = maxLabelSizeString;
         });
@@ -113,14 +129,19 @@ class Reminder extends React.Component {
     }
 
     setInterval (value) {
-        var interval = 0;
-        if (isNaN(value)) {
-	    alert ('Interval must be a number');
+        const snackbarMBN = new MDCSnackbar(this.state.remindersListRef.current.querySelector('#mustBeNum'));
+        const snackbarTB = new MDCSnackbar(this.state.remindersListRef.current.querySelector('#tooBig'));
+        const snackbarTS = new MDCSnackbar(this.state.remindersListRef.current.querySelector('#tooSmall'));
+        let interval = 0;
+        if (isNaN(value) || value === "") {
+            snackbarMBN.open();
         } else {
 	    interval = parseInt (value);
-	    if (interval > 864000000) {
-	        alert('Selected interval is too big');
-	    } else {
+	    if (interval > 604800) {
+                snackbarTB.open();
+	    } else if (interval < 4) {
+                snackbarTS.open();
+            } else {
                 this.setState({
                     interval: value
                 });
@@ -145,35 +166,42 @@ class Reminder extends React.Component {
 
     render () {
         return (
-            <div ref={this.reminderRef}>
-              <label>Title:
-                <input type="text"
-                       id={"titleInput" + this.state.id}
-                       value={this.state.title}
-                       onChange={event => this.setTitle(event.target.value)}>
-                </input>
-              </label>
-              <label>Interval:
-                <input type="text"
-                       id={"intervalInput" + this.state.id}
-                       value={this.state.interval}
-                       onChange={event => this.setInterval(event.target.value)}>
-                </input>
-              </label>
-              <label>Body:
-                <input type="text"
-                       id={"bodyInput" + this.state.id}
-                       value={this.state.body}
-                       onChange={event => this.setBody(event.target.value)}>
-                </input>
-              </label>
-              <label>Icon:
-                <input type="text"
-                       id={"iconInput" + this.state.id}
-                       value={this.state.icon}
-                       onChange={event => this.setIcon(event.target.value)}>
-                </input>
-              </label>
+            <div className="mdc-card mdc-card--outlined" ref={this.reminderRef}>
+              <div>
+                <label>Title:
+                  <input type="text"
+                         id={"titleInput" + this.state.id}
+                         value={this.state.title}
+                         onChange={event => this.setTitle(event.target.value)}>
+                  </input>
+                </label><br />
+                <label>Interval:
+                  <input type="text"
+                         id={"intervalInput" + this.state.id}
+                         value={this.state.interval}
+                         onChange={event => this.setInterval(event.target.value)}>
+                  </input>
+                </label><br />
+                <label>Body:
+                  <input type="text"
+                         id={"bodyInput" + this.state.id}
+                         value={this.state.body}
+                         onChange={event => this.setBody(event.target.value)}>
+                  </input>
+                </label><br />
+                <label>Icon:
+                  <input type="text"
+                         id={"iconInput" + this.state.id}
+                         value={this.state.icon}
+                         onChange={event => this.setIcon(event.target.value)}>
+                  </input>
+	        </label><br />
+              </div>
+              <div className="mdc-card__action-icons">
+                <button className="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon"
+                        title="Delete"
+                        onClick={event => this.state.deleteReminder(this.state.id)}>delete</button>
+              </div>
             </div>
         );
     }
@@ -183,12 +211,18 @@ class RemindersList extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {reminders: []};
+        this.reminders = [];
+        this.state = {
+            reminders: []
+        };
         this.addReminderHandler = this.addReminderHandler.bind(this);
         this.setTitle = this.setTitle.bind(this);
         this.setInterval = this.setInterval.bind(this);
         this.setBody = this.setBody.bind(this);
         this.setIcon = this.setIcon.bind(this);
+        this.deleteReminder = this.deleteReminder.bind(this);
+        this.about = this.about.bind(this);
+        this.remindersListRef = React.createRef();
     }
 
     componentDidMount() {
@@ -199,12 +233,21 @@ class RemindersList extends React.Component {
         
     }
 
-    saveReminders (value) {
+    about() {
+        const dialog = new MDCDialog(this.remindersListRef.current.querySelector('#about'));
+        dialog.open();
+    }
+
+    saveReminders () {
         this.setState({
-            reminders: value
+            reminders: this.reminders
         });
         if (process.env.NODE_ENV === 'development') {
+            console.log("--- start");
             console.log(this.state.reminders);
+            console.log("--- mid");
+            console.log(this.reminders);
+            console.log("--- end");
         }
     }
 
@@ -213,82 +256,174 @@ class RemindersList extends React.Component {
     }
 
     setSchedule (reminder) {
-        var schedule = reminder.schedule;
+        let schedule = reminder.schedule;
         if (schedule != null) {
 	    clearInterval(schedule);
         }
+        console.log(parseInt(reminder.interval) * 1000);
         return setInterval(function () {reminderNotify(reminder.title, reminder.body, reminder.icon)},
                            parseInt(reminder.interval) * 1000);
     }
 
     setTitle (id, value) {
-        var reminders = this.state.reminders;
-        var intID = parseInt(id);
-        reminders[intID].title = value;
-        reminders[intID].schedule = this.setSchedule (reminders[intID]);
-        this.saveReminders (reminders);
+        let intID = parseInt(id);
+        this.reminders[intID].title = value;
+        this.reminders[intID].schedule = this.setSchedule (this.reminders[intID]);
+        this.saveReminders ();
     }
 
     setInterval (id, value) {
-        var reminders = this.state.reminders;
-        var intID = parseInt(id);
-        reminders[intID].interval = value;
-        reminders[intID].schedule = this.setSchedule (reminders[intID]);
-        this.saveReminders (reminders);
+        let intID = parseInt(id);
+        this.reminders[intID].interval = value;
+        this.reminders[intID].schedule = this.setSchedule (this.reminders[intID]);
+        this.saveReminders ();
     }
 
     setBody (id, value) {
-        var reminders = this.state.reminders;
-        var intID = parseInt(id);
-        reminders[intID].body = value;
-        reminders[intID].schedule = this.setSchedule (reminders[intID]);
-        this.saveReminders (reminders);
+        let intID = parseInt(id);
+        this.reminders[intID].body = value;
+        this.reminders[intID].schedule = this.setSchedule (this.reminders[intID]);
+        this.saveReminders ();
     }
 
     setIcon (id, value) {
-        var reminders = this.state.reminders;
-        var intID = parseInt(id);
-        reminders[intID].icon = value;
-        reminders[intID].schedule = this.setSchedule (reminders[intID]);
-        this.saveReminders (reminders);
+        let intID = parseInt(id);
+        this.reminders[intID].icon = value;
+        this.reminders[intID].schedule = this.setSchedule (this.reminders[intID]);
+        this.saveReminders ();
     }
 
     addReminder() {
-        var reminders = this.state.reminders;
-        var last = reminders.length;
-        var newReminder = {
+        let last = this.reminders.length;
+        let newReminder = {
 	    title: "ExampleTitle" + last.toString(),
 	    interval: "600",
 	    body: "ExampleBody" + last.toString(),
 	    icon: "reminder-512.png",
-	    schedule: null
+	    schedule: null,
+            visible: true
         };
-        reminders.push(newReminder);
-        this.saveReminders (reminders);
+        this.reminders.push(newReminder);
+        this.saveReminders ();
+    }
+
+    deleteReminder (id) {
+        let intID = parseInt(id);
+        if (this.reminders[intID].schedule != null) {
+            clearInterval(this.reminders[intID].schedule);
+            this.reminders[intID].schedule = null;
+        }
+        this.reminders[intID].visible = false;
+        this.forceUpdate();
+        this.saveReminders ();
     }
 
     render () {
-        var remindersCount = this.state.reminders.length;
-        var remindersRepresentation = [];
-        for (var i = 0; i < remindersCount; i++) {
-            remindersRepresentation.push(
-                <Reminder
-                  id={i.toString()}
-                  key={"Reminder" + i}
-                  title={this.state.reminders[i].title}
-                  interval={this.state.reminders[i].interval}
-                  body={this.state.reminders[i].body}
-                  icon={this.state.reminders[i].icon}
-                  setTitleHandler={this.setTitle}
-                  setIntervalHandler={this.setInterval}
-                  setBodyHandler={this.setBody}
-                  setIconHandler={this.setIcon}
-                />);
+        let remindersCount = this.state.reminders.length;
+        let remindersRepresentation = [];
+        for (let i = 0; i < remindersCount; i++) {
+            if (this.reminders[i].visible) {
+                remindersRepresentation.push(
+                    <Reminder
+                      id={i.toString()}
+                      key={"Reminder" + i}
+                      title={this.state.reminders[i].title}
+                      interval={this.state.reminders[i].interval}
+                      body={this.state.reminders[i].body}
+                      icon={this.state.reminders[i].icon}
+                      setTitleHandler={this.setTitle}
+                      setIntervalHandler={this.setInterval}
+                      setBodyHandler={this.setBody}
+                      setIconHandler={this.setIcon}
+                      deleteReminder={this.deleteReminder}
+                      remindersListRef={this.remindersListRef}
+                    />);
+            }
         }
         return (
-	    <div>
-              {remindersRepresentation}
-              <AddReminder handler={this.addReminderHandler}/>
+	    <div ref={this.remindersListRef}>
+              <TopAppBar>
+                <TopAppBarRow>
+                  <TopAppBarSection align='start'>
+                    <TopAppBarTitle>Looping Reminder</TopAppBarTitle>
+                  </TopAppBarSection>
+                  <TopAppBarSection align='end' role='toolbar'>
+                    <TopAppBarIcon actionItem tabIndex={0}>
+                      <MaterialIcon 
+                        aria-label="add a reminder" 
+                        hasRipple 
+                        icon='add' 
+                        onClick={() => this.addReminder()}
+                      />
+                    </TopAppBarIcon>
+                    <TopAppBarIcon actionItem tabIndex={0}>
+                      <MaterialIcon 
+                        aria-label="about" 
+                        hasRipple 
+                        icon='help' 
+                        onClick={() => this.about()}
+                      />
+                    </TopAppBarIcon>
+                  </TopAppBarSection>
+                </TopAppBarRow>
+              </TopAppBar>
+              <TopAppBarFixedAdjust>
+                <section className="remindersSection">
+                  {remindersRepresentation}
+                </section>
+
+              <div className="mdc-snackbar" id="mustBeNum"><div className="mdc-snackbar__surface"><div className="mdc-snackbar__label" role="status" aria-live="polite">Interval must be a number!</div></div></div>
+              <div className="mdc-snackbar" id="tooBig"><div className="mdc-snackbar__surface"><div className="mdc-snackbar__label" role="status" aria-live="polite">Selected interval is too big!</div></div></div>
+              <div className="mdc-snackbar" id="tooSmall"><div className="mdc-snackbar__surface"><div className="mdc-snackbar__label" role="status" aria-live="polite">Selected interval is too small!</div></div></div>
+              
+              <div className="mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content" id="settings-dialog">
+                <div className="mdc-dialog__container">
+                  <div className="mdc-dialog__surface">
+                    <h2 className="mdc-dialog__title" id="settings-dialog-title">Settings</h2>
+                    <div className="mdc-dialog__content" id="settings-dialog-content">
+
+                    </div>
+                    <footer className="mdc-dialog__actions">
+                      <button type="button" className="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+                        <span className="mdc-button__label">Close</span>
+                      </button>
+                    </footer>
+                  </div>
+                </div>
+                <div className="mdc-dialog__scrim"></div>
+              </div>
+              <div className="mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content" id="about">
+                <div className="mdc-dialog__container">
+                  <div className="mdc-dialog__surface">
+                    <h2 className="mdc-dialog__title" id="about-dialog-title">About</h2>
+                    <div className="mdc-dialog__content" id="about-dialog-content">
+                      <p>Copyright &copy; 2019 Marco Parrone</p>
+                      <p>Permission is hereby granted, free of charge, to any person obtaining a copy
+                        of this software and associated documentation files (the "Software"), to deal
+                        in the Software without restriction, including without limitation the rights
+                        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                        copies of the Software, and to permit persons to whom the Software is
+                        furnished to do so, subject to the following conditions:</p>
+                      <p>The above copyright notice and this permission notice shall be included in all
+                        copies or substantial portions of the Software.</p>
+                      <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                        SOFTWARE.</p>
+                    </div>
+                    <footer className="mdc-dialog__actions">
+                      <button type="button" className="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+                        <span className="mdc-button__label">Close</span>
+                      </button>
+                    </footer>
+                  </div>
+                </div>
+                <div className="mdc-dialog__scrim"></div>
+              </div>
+	    </TopAppBarFixedAdjust>
             </div>
         );
     }
@@ -297,12 +432,14 @@ class RemindersList extends React.Component {
 function App() {
     return (
         <div className="App">
-	  <header className="App-header">
-            <EnableNotifications/>
-            <RemindersList/>
-          </header>
+          <EnableNotifications/>
+          <RemindersList/>
         </div>
     );
 }
 
 export default App;
+
+// Local Variables:
+// mode: rjsx
+// End:

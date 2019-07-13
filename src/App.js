@@ -368,6 +368,9 @@ class RemindersList extends React.Component {
                 </TopAppBarRow>
               </TopAppBar>
               <TopAppBarFixedAdjust>
+
+                <EnableNotifications/>
+                
                 <section className="remindersSection">
                   {remindersRepresentation}
                 </section>
@@ -432,7 +435,6 @@ class RemindersList extends React.Component {
 function App() {
     return (
         <div className="App">
-          <EnableNotifications/>
           <RemindersList/>
         </div>
     );

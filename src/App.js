@@ -139,7 +139,7 @@ class Reminder extends React.Component {
 	    interval = parseInt (value);
 	    if (interval > 604800) {
                 snackbarTB.open();
-	    } else if (interval < 4) {
+	    } else if (interval < 1) {
                 snackbarTS.open();
             } else {
                 this.setState({
@@ -215,18 +215,18 @@ class RemindersList extends React.Component {
         this.state = {
             reminders: []
         };
-        this.addReminderHandler = this.addReminderHandler.bind(this);
         this.setTitle = this.setTitle.bind(this);
         this.setInterval = this.setInterval.bind(this);
         this.setBody = this.setBody.bind(this);
         this.setIcon = this.setIcon.bind(this);
         this.deleteReminder = this.deleteReminder.bind(this);
         this.about = this.about.bind(this);
+
         this.remindersListRef = React.createRef();
     }
 
     componentDidMount() {
-        
+        this.loadReminders();        
     }
     
     componentWillUnmount() {
@@ -239,20 +239,28 @@ class RemindersList extends React.Component {
     }
 
     saveReminders () {
+        let newReminders = [];
+
+        // Save in current state.
         this.setState({
             reminders: this.reminders
         });
+
+        // Save in local storage, skipping deleted reminders.
+        for (let i = 0; i < this.reminders.length; i++) {
+            if (this.reminders[i].visible) {
+                newReminders.push (this.reminders[i]);
+            }
+        }
+        localStorage.setItem('reminders', JSON.stringify(newReminders));
+        
         if (process.env.NODE_ENV === 'development') {
-            console.log("--- start");
+            console.log("--- saveReminders:");
             console.log(this.state.reminders);
             console.log("--- mid");
             console.log(this.reminders);
-            console.log("--- end");
+            console.log("--- at end of saveReminders");
         }
-    }
-
-    addReminderHandler() {
-        this.addReminder ();
     }
 
     setSchedule (reminder) {
@@ -260,7 +268,11 @@ class RemindersList extends React.Component {
         if (schedule != null) {
 	    clearInterval(schedule);
         }
-        console.log(parseInt(reminder.interval) * 1000);
+        if (process.env.NODE_ENV === 'development') {
+            console.log("--- setSchedule:");
+            console.log(parseInt(reminder.interval) * 1000);
+            console.log("--- at end of setSchedule");
+        }
         return setInterval(function () {reminderNotify(reminder.title, reminder.body, reminder.icon)},
                            parseInt(reminder.interval) * 1000);
     }
@@ -291,6 +303,23 @@ class RemindersList extends React.Component {
         this.reminders[intID].icon = value;
         this.reminders[intID].schedule = this.setSchedule (this.reminders[intID]);
         this.saveReminders ();
+    }
+
+    loadReminders () {
+        let reminders = localStorage.getItem('reminders');
+        if (process.env.NODE_ENV === 'development') {
+            console.log("--- loadReminders:");
+            console.log(reminders);
+            console.log("--- at end of loadReminders");
+        }
+        if (reminders) {
+            this.reminders = JSON.parse(reminders);
+        }
+        this.reminders.forEach (this.setSchedule);
+
+        this.setState({
+            reminders: this.reminders
+        });
     }
 
     addReminder() {

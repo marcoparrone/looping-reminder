@@ -51,6 +51,5 @@ input {
 
 section.remindersSection {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
 }

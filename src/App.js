@@ -410,23 +410,7 @@ class RemindersList extends React.Component {
               <div className="mdc-snackbar" id="mustBeNum"><div className="mdc-snackbar__surface"><div className="mdc-snackbar__label" role="status" aria-live="polite">Interval must be a number!</div></div></div>
               <div className="mdc-snackbar" id="tooBig"><div className="mdc-snackbar__surface"><div className="mdc-snackbar__label" role="status" aria-live="polite">Selected interval is too big!</div></div></div>
               <div className="mdc-snackbar" id="tooSmall"><div className="mdc-snackbar__surface"><div className="mdc-snackbar__label" role="status" aria-live="polite">Selected interval is too small!</div></div></div>
-              
-              <div className="mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content" id="settings-dialog">
-                <div className="mdc-dialog__container">
-                  <div className="mdc-dialog__surface">
-                    <h2 className="mdc-dialog__title" id="settings-dialog-title">Settings</h2>
-                    <div className="mdc-dialog__content" id="settings-dialog-content">
 
-                    </div>
-                    <footer className="mdc-dialog__actions">
-                      <button type="button" className="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
-                        <span className="mdc-button__label">Close</span>
-                      </button>
-                    </footer>
-                  </div>
-                </div>
-                <div className="mdc-dialog__scrim"></div>
-              </div>
               <div className="mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content" id="about">
                 <div className="mdc-dialog__container">
                   <div className="mdc-dialog__surface">

@@ -314,12 +314,15 @@ class RemindersList extends React.Component {
         }
         if (reminders) {
             this.reminders = JSON.parse(reminders);
-        }
-        this.reminders.forEach (this.setSchedule);
+            this.setState({
+                reminders: this.reminders
+            });
 
-        this.setState({
-            reminders: this.reminders
-        });
+            for (let i = 0; i < this.reminders.length; i++) {
+                this.reminders[i].schedule = null;
+                this.reminders[i].schedule = this.setSchedule (this.reminders[i]);
+            }
+        }
     }
 
     addReminder() {

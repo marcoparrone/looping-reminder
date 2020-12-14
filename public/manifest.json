@@ -7,7 +7,8 @@
 	{ "src": "reminder-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any maskable"},
 	{ "src": "reminder-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
 	{ "src": "reminder-256.png", "sizes": "256x256", "type": "image/png", "purpose": "any maskable"},
-	{ "src": "reminder-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+	{ "src": "reminder-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"},
+	{ "src": "favicon.ico", "sizes": "64x64", "type": "image/x-icon" }
     ],
     "lang": "en-US",
     "start_url": "https://marcoparrone.github.io/looping-reminder/",

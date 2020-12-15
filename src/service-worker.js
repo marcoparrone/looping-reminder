@@ -9,6 +9,6 @@ precacheAndRoute(self.__WB_MANIFEST);
 registerRoute(
   /.*marcoparrone\.com/,
   new StaleWhileRevalidate({
-    cacheName: 'marcoparronegh',
+    cacheName: 'marcoparrone',
   })
 );

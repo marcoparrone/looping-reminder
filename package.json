@@ -32,8 +32,8 @@
 			"scripts": {
 						"predeploy": "npm run build",
 						"deploy": "mydeploy.sh looping-reminder",
-						"start": "webpack --config webpack.dev.js && react-scripts start",
-						"build": "webpack --config webpack.prod.js && react-scripts build",
+						"start": "react-scripts start",
+						"build": "react-scripts build",
 						"test": "react-scripts test",
 						"eject": "react-scripts eject"
 			},

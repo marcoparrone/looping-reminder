@@ -221,6 +221,7 @@ class RemindersList extends React.Component {
         this.setIcon = this.setIcon.bind(this);
         this.deleteReminder = this.deleteReminder.bind(this);
         this.about = this.about.bind(this);
+        this.help = this.help.bind(this);
 
         this.remindersListRef = React.createRef();
     }
@@ -231,6 +232,11 @@ class RemindersList extends React.Component {
     
     componentWillUnmount() {
         
+    }
+
+    help() {
+        const dialog = new MDCDialog(this.remindersListRef.current.querySelector('#help'));
+        dialog.open();
     }
 
     about() {
@@ -389,10 +395,18 @@ class RemindersList extends React.Component {
                       />
                     </TopAppBarIcon>
                     <TopAppBarIcon actionItem tabIndex={0}>
-                      <MaterialIcon 
-                        aria-label="about" 
-                        hasRipple 
-                        icon='help' 
+                      <MaterialIcon
+                        aria-label="help"
+                        hasRipple
+                        icon='help'
+                        onClick={() => this.help()}
+                      />
+                    </TopAppBarIcon>
+                    <TopAppBarIcon actionItem tabIndex={0}>
+                      <MaterialIcon
+                        aria-label="about"
+                        hasRipple
+                        icon='info'
                         onClick={() => this.about()}
                       />
                     </TopAppBarIcon>
@@ -411,12 +425,31 @@ class RemindersList extends React.Component {
               <div className="mdc-snackbar" id="tooBig"><div className="mdc-snackbar__surface"><div className="mdc-snackbar__label" role="status" aria-live="polite">Selected interval is too big!</div></div></div>
               <div className="mdc-snackbar" id="tooSmall"><div className="mdc-snackbar__surface"><div className="mdc-snackbar__label" role="status" aria-live="polite">Selected interval is too small!</div></div></div>
 
-              <div className="mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content" id="about">
+                <div className="mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content" id="help">
+                  <div className="mdc-dialog__container">
+                    <div className="mdc-dialog__surface">
+                      <h2 className="mdc-dialog__title" id="help-dialog-title">Help</h2>
+                      <div className="mdc-dialog__content" id="help-dialog-content">
+                        <p>Looping Reminder is an application which sends notifications at defined intervals of time.</p>
+                        <p>To add a new reminder, press on the "plus" icon. Then, edit the text fields and insert the title of the notification, the interval (in seconds), the text that will be contained in the body of the notification, and the URL of an icon.</p>
+                        <p>When the application is running in a browser, then the browser may disable the notifications if the application is not open in the active tab. If the application was installed as a Progressive Web App, your device may suspend the applcation, especially if your device battery is low. So, use this application if it may be of any help to you, but don't use it for anything important.</p>
+                      </div>
+                      <footer className="mdc-dialog__actions">
+                        <button type="button" className="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+                          <span className="mdc-button__label">Close</span>
+                        </button>
+                      </footer>
+                    </div>
+                  </div>
+                  <div className="mdc-dialog__scrim"></div>
+                </div>
+
+                <div className="mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content" id="about">
                 <div className="mdc-dialog__container">
                   <div className="mdc-dialog__surface">
                     <h2 className="mdc-dialog__title" id="about-dialog-title">About</h2>
                     <div className="mdc-dialog__content" id="about-dialog-content">
-                      <p>Copyright &copy; 2019 Marco Parrone</p>
+                      <p>Copyright &copy; 2019,2020 Marco Parrone</p>
                       <p>Permission is hereby granted, free of charge, to any person obtaining a copy
                         of this software and associated documentation files (the "Software"), to deal
                         in the Software without restriction, including without limitation the rights
@@ -432,9 +465,7 @@ class RemindersList extends React.Component {
                         LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
                         OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
                         SOFTWARE.</p>
-                      
-                      <p>Email: <a href="mailto:marco@marcoparrone.com">marco@marcoparrone.com</a><br />
-                        Github: <a href="https://github.com/marcoparrone/looping-reminder">https://github.com/marcoparrone/looping-reminder</a></p>
+                      <p>Website: <a href="https://marcoparrone.com">https://marcoparrone.com</a></p>
                     </div>
                     <footer className="mdc-dialog__actions">
                       <button type="button" className="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">

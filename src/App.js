@@ -21,6 +21,8 @@ import {MDCDialog} from '@material/dialog';
 
 import "@material/card/dist/mdc.card.css";
 
+import saveAs from 'file-saver';
+
 // Register the service worker.
 navigator.serviceWorker.register('notification.js');
 
@@ -222,7 +224,10 @@ class RemindersList extends React.Component {
         this.deleteReminder = this.deleteReminder.bind(this);
         this.about = this.about.bind(this);
         this.help = this.help.bind(this);
-
+        this.importExportReminders = this.importExportReminders.bind(this);
+        this.importRemindersReaderOnload = this.importRemindersReaderOnload.bind(this);
+        this.importReminders = this.importReminders.bind(this);
+        this.exportReminders = this.exportReminders.bind(this);
         this.remindersListRef = React.createRef();
     }
 
@@ -232,6 +237,11 @@ class RemindersList extends React.Component {
     
     componentWillUnmount() {
         
+    }
+
+    importExportReminders() {
+        const dialog = new MDCDialog(this.remindersListRef.current.querySelector('#impexp'));
+        dialog.open();
     }
 
     help() {
@@ -259,25 +269,12 @@ class RemindersList extends React.Component {
             }
         }
         localStorage.setItem('reminders', JSON.stringify(newReminders));
-        
-        if (process.env.NODE_ENV === 'development') {
-            console.log("--- saveReminders:");
-            console.log(this.state.reminders);
-            console.log("--- mid");
-            console.log(this.reminders);
-            console.log("--- at end of saveReminders");
-        }
     }
 
     setSchedule (reminder) {
         let schedule = reminder.schedule;
         if (schedule != null) {
 	    clearInterval(schedule);
-        }
-        if (process.env.NODE_ENV === 'development') {
-            console.log("--- setSchedule:");
-            console.log(parseInt(reminder.interval) * 1000);
-            console.log("--- at end of setSchedule");
         }
         return setInterval(function () {reminderNotify(reminder.title, reminder.body, reminder.icon)},
                            parseInt(reminder.interval) * 1000);
@@ -313,11 +310,6 @@ class RemindersList extends React.Component {
 
     loadReminders () {
         let reminders = localStorage.getItem('reminders');
-        if (process.env.NODE_ENV === 'development') {
-            console.log("--- loadReminders:");
-            console.log(reminders);
-            console.log("--- at end of loadReminders");
-        }
         if (reminders) {
             this.reminders = JSON.parse(reminders);
             this.setState({
@@ -354,6 +346,57 @@ class RemindersList extends React.Component {
         this.reminders[intID].visible = false;
         this.forceUpdate();
         this.saveReminders ();
+    }
+
+    importRemindersReaderOnload (e) {
+        let newReminders = [];
+        newReminders=JSON.parse(e.target.result);
+        if (newReminders.length > 0) {
+            // Empty reminders array from old entries.
+            let oldCount = this.reminders.length;
+            for (let i = 0; i < oldCount; i++) {
+                this.reminders.pop();
+            }
+            // Populate reminders array with new imported items.
+            for (let i = 0; i < newReminders.length; i++) {
+                this.reminders.push(newReminders[i]);
+            }
+            // Save and display.
+            this.saveReminders ();
+            this.forceUpdate();
+        }
+    }
+
+    importReminders (e) {
+        let file = e.target.files[0];
+        if (! file) {
+            if (e.target.files.length > 0) {
+                alert ('error: cannot load file.');
+            }
+            return;
+        }
+        let reader = new FileReader();
+        reader.onload = this.importRemindersReaderOnload;
+        reader.readAsText(file);
+    }
+
+    exportReminders () {
+        let newReminders = [];
+
+        // Save in current state.
+        this.setState({
+            reminders: this.reminders
+        });
+
+        // Export to JSON file, skipping deleted reminders.
+        for (let i = 0; i < this.reminders.length; i++) {
+            if (this.reminders[i].visible) {
+                newReminders.push (this.reminders[i]);
+            }
+        }
+
+        saveAs(new Blob([JSON.stringify(newReminders)], {type: "application/json;charset=utf-8"}),
+               "reminders.json");
     }
 
     render () {
@@ -396,6 +439,14 @@ class RemindersList extends React.Component {
                     </TopAppBarIcon>
                     <TopAppBarIcon actionItem tabIndex={0}>
                       <MaterialIcon
+                        aria-label="import and export reminders"
+                        hasRipple
+                        icon='import_export'
+                        onClick={() => this.importExportReminders()}
+                      />
+                    </TopAppBarIcon>
+                    <TopAppBarIcon actionItem tabIndex={0}>
+                      <MaterialIcon
                         aria-label="help"
                         hasRipple
                         icon='help'
@@ -425,6 +476,22 @@ class RemindersList extends React.Component {
               <div className="mdc-snackbar" id="tooBig"><div className="mdc-snackbar__surface"><div className="mdc-snackbar__label" role="status" aria-live="polite">Selected interval is too big!</div></div></div>
               <div className="mdc-snackbar" id="tooSmall"><div className="mdc-snackbar__surface"><div className="mdc-snackbar__label" role="status" aria-live="polite">Selected interval is too small!</div></div></div>
 
+                <div className="mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content" id="impexp">
+                  <div className="mdc-dialog__container">
+                    <div className="mdc-dialog__surface">
+                      <h2 className="mdc-dialog__title" id="impexp-dialog-title">Import/export</h2>
+                      <div className="mdc-dialog__content" id="impexp-dialog-content">
+                        <p>Here you can import and export your reminders in JSON format.</p>
+                      </div>
+                      <footer className="mdc-dialog__actions">
+                        <label>Import:&nbsp;<input type="file" onChange={e => this.importReminders(e)} className="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes" /></label>
+                        <input type="submit" value="Back" className="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes" />
+                        <input type="submit" value="Export" onClick={event => this.exportReminders()} className="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes" />
+                      </footer>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content" id="help">
                   <div className="mdc-dialog__container">
                     <div className="mdc-dialog__surface">
@@ -433,6 +500,8 @@ class RemindersList extends React.Component {
                         <p>Looping Reminder is an application which sends notifications at defined intervals of time.</p>
                         <p>To add a new reminder, press on the "plus" icon. Then, edit the text fields and insert the title of the notification, the interval (in seconds), the text that will be contained in the body of the notification, and the URL of an icon.</p>
                         <p>When the application is running in a browser, then the browser may disable the notifications if the application is not open in the active tab. If the application was installed as a Progressive Web App, your device may suspend the applcation, especially if your device battery is low. So, use this application if it may be of any help to you, but don't use it for anything important.</p>
+                        <p>To import or export the reminders, press on the import/export icon.</p>
+                        <p>For preventing the loss of the reminders, it is suggested to make a backup using the "export" functionality.</p>
                       </div>
                       <footer className="mdc-dialog__actions">
                         <button type="button" className="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">

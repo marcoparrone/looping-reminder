@@ -468,7 +468,7 @@ class RemindersList extends React.Component {
     let remindersCount = this.state.reminders.length;
     let remindersRepresentation = [];
     for (let i = 0; i < remindersCount; i++) {
-      if (this.reminders[i].visible) {
+      if (this.reminders[i].visible !== 0) {
         remindersRepresentation.push(
           <Reminder
             id={i.toString()}

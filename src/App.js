@@ -36,9 +36,9 @@ function reminderNotify(title, body, icon) {
         body: body,
         icon: icon
       }))
-      .catch(err => alert('Service Worker registration error: ' + err));
+      .catch(err => console.log('Service Worker registration error: ' + err));
   } catch (err) {
-    alert('Notification API error: ' + err);
+    console.log('Notification API error: ' + err);
   }
 }
 
@@ -360,8 +360,7 @@ class RemindersList extends React.Component {
   // swap the properties of reminder with ID a with the properties of the reminder with id b
   swapReminders(a, b) {
     let tmpreminder = {};
-    if (this.reminders[a].visible !== 0 && this.reminders[b].visible !== 0)
-    {
+    if (this.reminders[a].visible !== 0 && this.reminders[b].visible !== 0) {
       tmpreminder.title = this.reminders[a].title;
       tmpreminder.interval = this.reminders[a].interval;
       tmpreminder.body = this.reminders[a].body;
@@ -389,7 +388,7 @@ class RemindersList extends React.Component {
     let intID = parseInt(id);
     for (let otherID = intID - 1; otherID >= 0 && otherID < this.reminders.length; otherID--) {
       if (this.reminders[otherID].visible !== 0) {
-        this.swapReminders(intID,otherID);
+        this.swapReminders(intID, otherID);
         break;
       }
     }
@@ -400,7 +399,7 @@ class RemindersList extends React.Component {
     let intID = parseInt(id);
     for (let otherID = intID + 1; otherID >= 0 && otherID < this.reminders.length; otherID++) {
       if (this.reminders[otherID].visible !== 0) {
-        this.swapReminders(intID,otherID);
+        this.swapReminders(intID, otherID);
         break;
       }
     }
@@ -628,7 +627,3 @@ function App() {
 }
 
 export default App;
-
-// Local Variables:
-// mode: rjsx
-// End:

@@ -11,7 +11,7 @@
 	{ "src": "favicon.ico", "sizes": "64x64", "type": "image/x-icon" }
     ],
     "lang": "en-US",
-    "start_url": "https://marcoparrone.com/looping-reminder/",
+    "start_url": "https://marcoparrone.github.io/looping-reminder/",
     "display": "standalone",
     "background_color": "#000000",
     "theme_color": "#ffffff"

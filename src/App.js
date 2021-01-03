@@ -26,7 +26,7 @@ import saveAs from 'file-saver';
 import get_timestamp from './timestamp';
 
 // Register the service worker.
-navigator.serviceWorker.register('notification.js');
+"serviceWorker"in navigator && navigator.serviceWorker.register('notification.js');
 
 // Add a notification for the reminder.
 function reminderNotify(title, body, icon) {
@@ -586,7 +586,7 @@ class RemindersList extends React.Component {
               <div className="mdc-dialog__surface">
                 <h2 className="mdc-dialog__title" id="about-dialog-title">About</h2>
                 <div className="mdc-dialog__content" id="about-dialog-content">
-                  <p>Copyright &copy; 2019,2020 Marco Parrone.</p>
+                  <p>Copyright &copy; 2019,2020,2021 Marco Parrone.</p>
                   <p>Permission is hereby granted, free of charge, to any person obtaining a copy
                   of this software and associated documentation files (the "Software"), to deal
                   in the Software without restriction, including without limitation the rights

@@ -1,6 +1,7 @@
 {
     "name": "Looping Reminder",
     "short_name": "Reminder",
+    "description": "An app which sends notifications at defined intervals of time.",
     "icons": [
 	{ "src": "reminder-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any maskable"},
 	{ "src": "reminder-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any maskable"},
@@ -13,6 +14,21 @@
     "lang": "en-US",
     "start_url": "https://marcoparrone.github.io/looping-reminder/",
     "display": "standalone",
-    "background_color": "#000000",
-    "theme_color": "#ffffff"
+    "orientation": "any",
+    "theme_color": "#000000",
+    "background_color": "#ffffff",
+    "scope": "https://marcoparrone.github.io/looping-reminder/",
+    "categories":  ["productivity", "tools"],
+    "screenshots" : [
+        {
+          "src": "screenshot1.png",
+          "sizes": "1080x2220",
+          "type": "image/png"
+        },
+        {
+          "src": "screenshot2.png",
+          "sizes": "1080x2220",
+          "type": "image/png"
+        }
+      ]
 }

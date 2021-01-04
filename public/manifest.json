@@ -12,12 +12,12 @@
 	{ "src": "favicon.ico", "sizes": "64x64", "type": "image/x-icon" }
     ],
     "lang": "en-US",
-    "start_url": "https://marcoparrone.github.io/looping-reminder/",
+    "start_url": "https://reminder.marcoparrone.com",
     "display": "standalone",
     "orientation": "any",
     "theme_color": "#000000",
     "background_color": "#ffffff",
-    "scope": "https://marcoparrone.github.io/looping-reminder/",
+    "scope": "https://reminder.marcoparrone.com",
     "categories":  ["productivity", "tools"],
     "screenshots" : [
         {

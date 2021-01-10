@@ -581,7 +581,7 @@ class RemindersList extends React.Component {
               <div className="mdc-dialog__surface">
                 <h2 className="mdc-dialog__title" id="help-dialog-title">Help</h2>
                 <div className="mdc-dialog__content" id="help-dialog-content">
-                  <p>Looping Reminder is an application which sends notifications at defined intervals of time.</p>
+                  <p>Looping Reminder is an application that sends notifications at defined intervals of time.</p>
                   <p>To add a new reminder, press on the "plus" icon. Then, edit the text fields and insert the title of the notification, the interval (in seconds), the text that will be contained in the body of the notification, and the URL of an icon.</p>
                   <p>When the application is running in a browser, then the browser may disable the notifications if the application is not open in the active tab. If the application was installed, your device may suspend the application, especially if your device battery is low. So, use this application if it may be of any help to you, but don't use it for anything important.</p>
                   <p>To import or export the reminders, press on the import/export icon. When importing the reminders from a file, the current reminders will be deleted and overwritten.</p>
@@ -590,7 +590,7 @@ class RemindersList extends React.Component {
                     The reminders are saved in the browser's localStorage for the reminder.marcoparrone.com domain.
                     localStorage works fine with Chrome, Edge and Firefox browsers. Other browsers may delete localStorage after some time.
                     Android by default uses Chrome, Windows by default uses Edge. Looping Reminder currently is not supported on Apple products.
-                    With the purpose to help preventing the loss of the reminders, it is suggested to make a backup using the "export" functionality, every time you make some modifications which you don't want to lose.</p>
+                    With the purpose to help to prevent the loss of the reminders, it is suggested to make a backup using the "export" functionality, every time you make some modifications that you don't want to lose.</p>
                 </div>
                 <footer className="mdc-dialog__actions">
                   <button type="button" className="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">

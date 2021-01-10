@@ -419,7 +419,23 @@ class RemindersList extends React.Component {
 
   importRemindersReaderOnload(e) {
     let newReminders = JSON.parse(e.target.result);
-    if (newReminders.length > 0) {
+    let missingFields = false;
+
+    for (let i = 0; i < newReminders.length; i++) {
+      if (newReminders[i].title === undefined
+        || newReminders[i].interval === undefined
+        || newReminders[i].body === undefined
+        || newReminders[i].icon === undefined
+        || newReminders[i].schedule === undefined
+        || newReminders[i].visible === undefined)
+        {
+          missingFields = true;
+          alert ('error: file format is wrong.');
+          break;
+        }
+    }
+
+    if (missingFields === false && newReminders.length > 0) {
       // Delete old schedules.
       for (let i = 0; i < this.reminders.length; i++) {
         this.deleteReminder(i);

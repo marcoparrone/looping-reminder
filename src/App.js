@@ -108,25 +108,8 @@ class Reminder extends React.Component {
     this.reminderRef = React.createRef();
   }
 
-  // Equalize the legth of the labels, for a more graphically pleasing interface.
-  makeLabelsEqualSized() {
-    let labels = this.reminderRef.current.querySelectorAll("label");
-    let maxLabelSize = 0;
-    labels.forEach(function (label) {
-      let currLabelSize = parseInt(window.getComputedStyle(label).width);
-      if (currLabelSize > maxLabelSize) {
-        maxLabelSize = currLabelSize;
-      }
-    });
-    maxLabelSize += 5;
-    let maxLabelSizeString = maxLabelSize.toString() + "px";
-    labels.forEach(function (label) {
-      label.style.width = maxLabelSizeString;
-    });
-  }
-
   componentDidMount() {
-    this.makeLabelsEqualSized();
+
   }
 
   componentWillUnmount() {
@@ -180,34 +163,34 @@ class Reminder extends React.Component {
     return (
       <div className="mdc-card mdc-card--outlined" ref={this.reminderRef}>
         <div>
-          <label>{this.props.text_edit_title}
-            <input type="text"
-              id={"titleInput" + this.state.id}
-              value={this.state.title}
-              onChange={event => this.setTitle(event.target.value)}>
-            </input>
-          </label><br />
-          <label>{this.props.text_edit_interval}
-            <input type="text"
-              id={"intervalInput" + this.state.id}
-              value={this.state.interval}
-              onChange={event => this.setInterval(event.target.value)}>
-            </input>
-          </label><br />
-          <label>{this.props.text_edit_body}
-            <input type="text"
-              id={"bodyInput" + this.state.id}
-              value={this.state.body}
-              onChange={event => this.setBody(event.target.value)}>
-            </input>
-          </label><br />
-          <label>{this.props.text_edit_icon}
-            <input type="text"
-              id={"iconInput" + this.state.id}
-              value={this.state.icon}
-              onChange={event => this.setIcon(event.target.value)}>
-            </input>
-          </label><br />
+          <label htmlFor={"titleInput" + this.state.id}>{this.props.text_edit_title}</label>
+          <input type="text"
+            id={"titleInput" + this.state.id}
+            value={this.state.title}
+            onChange={event => this.setTitle(event.target.value)}>
+          </input>
+          <br />
+          <label htmlFor={"intervalInput" + this.state.id}>{this.props.text_edit_interval}</label>
+          <input type="text"
+            id={"intervalInput" + this.state.id}
+            value={this.state.interval}
+            onChange={event => this.setInterval(event.target.value)}>
+          </input>
+          <br />
+          <label htmlFor={"bodyInput" + this.state.id}>{this.props.text_edit_body}</label>
+          <input type="text"
+            id={"bodyInput" + this.state.id}
+            value={this.state.body}
+            onChange={event => this.setBody(event.target.value)}>
+          </input>
+          <br />
+          <label htmlFor={"iconInput" + this.state.id}>{this.props.text_edit_icon}</label>
+          <input type="text"
+            id={"iconInput" + this.state.id}
+            value={this.state.icon}
+            onChange={event => this.setIcon(event.target.value)}>
+          </input>
+          <br />
         </div>
         <div className="mdc-card__action-icons">
           <button className="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon"

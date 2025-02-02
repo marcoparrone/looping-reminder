@@ -2,4 +2,4 @@
 
 An application for showing notifications at defined intervals of time. For example, it can be useful for remembering to take a break from time to time when working at the computer.
 
-It is a Progressive Web App and it is available here: https://reminder.marcoparrone.com
+It is a Progressive Web App and it is available here: https://marcoparrone.github.io/reminder

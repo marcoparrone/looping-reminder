@@ -1,5 +1,0 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target" : { "namespace": "android_app", "package_name": "com.marcoparrone.twa.reminder",
-                   "sha256_cert_fingerprints": ["85:B6:7D:2C:04:B9:49:63:3E:FC:59:25:61:1C:CF:5A:3F:9A:C3:89:C3:7D:F6:1A:90:AF:76:C5:18:A0:05:B8"] }
-}]

@@ -12,12 +12,12 @@
 	{ "src": "favicon.ico", "sizes": "64x64", "type": "image/x-icon" }
     ],
     "lang": "en-US",
-    "start_url": "https://reminder.marcoparrone.com",
+    "start_url": "https://marcoparrone.github.io/reminder",
     "display": "standalone",
     "orientation": "any",
     "theme_color": "#000000",
     "background_color": "#ffffff",
-    "scope": "https://reminder.marcoparrone.com",
+    "scope": "https://marcoparrone.github.io/reminder",
     "categories":  ["productivity", "tools"],
     "screenshots" : [
         {
